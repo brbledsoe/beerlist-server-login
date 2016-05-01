@@ -27,12 +27,10 @@ app.use(expressSession({ secret: 'mySecretKey' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-//===================================
-//===================================
 
-app.post('/register', passport.authenticate('register'), function (req, res) {
-  res.json(req.user);
-});
+
+//===================================
+//===================================
 
 app.get('/beers', function (req, res) {
   Beer.find(function (error, beers) {
@@ -95,22 +93,60 @@ app.post('/beers/:id/reviews', function(req, res, next) {
 //===================================
 //More Authentication Stuff
 //===================================
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
 
 var LocalStrategy = require('passport-local').Strategy;
 
 passport.use('register', new LocalStrategy(function (username, password, done) {
-  var user = {
-    username: username,
-    password: password
-  }
+  User.findOne({ 'username': username }, function (err, user) {
+    // In case of any error return
+    if (err) {
+      console.log('Error in SignUp: ' + err);
+      return done(err);
+    }
 
-  console.log(user);
+    // already exists
+    if (user) {
+      console.log('User already exists');
+      return done(null, false);
+    } else {
+      // if there is no user with that matches
+      // create the user
+      var newUser = new User();
 
-  done(null, user);
+      // set the user's local credentials
+      newUser.username = username;
+      newUser.password = password;    // Note: Should create a hash out of this plain password!
+
+      // save the user
+      newUser.save(function (err) {
+        if (err) {
+          console.log('Error in Saving user: ' + err);
+          throw err;
+        }
+
+        console.log('User Registration successful');
+        return done(null, newUser);
+      });
+    }
+  });
 }));
 
+app.post('/register', passport.authenticate('register'), function (req, res) {
+  res.json(req.user);
+});
 //===================================
 //===================================
+
+app.get('/currentUser', function (req, res) {
+  res.send(req.user);
+});
 
 
 app.delete('/beers/:beer/reviews/:review', function(req, res, next) {
