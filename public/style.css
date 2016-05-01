@@ -54,7 +54,7 @@ p {
   display: block;
 }
 
-.reviews-container, .beers-container {
+.reviews-container, .beers-container, .register-container{
   display: none;
 }
 
