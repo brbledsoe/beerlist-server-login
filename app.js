@@ -6,6 +6,7 @@ mongoose.connect('mongodb://localhost/beers');
 
 var Beer = require("./models/BeerModel");
 var Review = require("./models/ReviewModel");
+var User = require("./models/UserModel");
 
 var app = express();
 
@@ -14,6 +15,24 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(express.static('public'));
 app.use(express.static('node_modules'));
+
+//===================================
+//Authentication
+//===================================
+
+var passport = require('passport');
+var expressSession = require('express-session');
+
+app.use(expressSession({ secret: 'mySecretKey' }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+//===================================
+//===================================
+
+app.post('/register', passport.authenticate('register'), function (req, res) {
+  res.json(req.user);
+});
 
 app.get('/beers', function (req, res) {
   Beer.find(function (error, beers) {
@@ -71,6 +90,28 @@ app.post('/beers/:id/reviews', function(req, res, next) {
     });
   });
 });
+
+
+//===================================
+//More Authentication Stuff
+//===================================
+
+var LocalStrategy = require('passport-local').Strategy;
+
+passport.use('register', new LocalStrategy(function (username, password, done) {
+  var user = {
+    username: username,
+    password: password
+  }
+
+  console.log(user);
+
+  done(null, user);
+}));
+
+//===================================
+//===================================
+
 
 app.delete('/beers/:beer/reviews/:review', function(req, res, next) {
   Beer.findById(req.params.beer, function (err, beer) {
