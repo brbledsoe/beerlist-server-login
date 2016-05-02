@@ -25,6 +25,24 @@ var AppView = Backbone.View.extend({
     this.listenTo(this.model, 'change:current_beer', this.renderDetailView);
 
     this.detailView = null;
+
+    //Navbar
+    this.$navContainer = this.$('.nav-container');
+    this.listenTo(this.model, 'change:current_user', this.renderNav);
+
+    //Manually render navbar on page load
+    this.navView = null;
+    this.renderNav();
+  },
+
+  renderNav: function () {
+    if (this.navView) {
+      this.navView.remove();
+    }
+
+    this.navView = new NavView({ model: this.model.get('current_user') || new UserModel()});
+
+    this.$navContainer.append(this.navView.render().el);
   },
 
   renderView: function () {
