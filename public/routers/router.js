@@ -1,6 +1,7 @@
 var BeerRouter = Backbone.Router.extend({
   routes: {
     'beers/:id': 'showReviews',
+    'login': 'renderLogin',
     'register': 'renderRegister',
     '*default': 'showBeers'
   },
@@ -16,6 +17,10 @@ var BeerRouter = Backbone.Router.extend({
 
   showBeers: function () {
     appModel.set('view', 'beers');
+  },
+
+  renderLogin: function () {
+    appModel.set('view', 'login');
   },
 
   renderRegister: function () {

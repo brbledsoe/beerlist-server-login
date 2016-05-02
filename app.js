@@ -141,7 +141,7 @@ passport.use('register', new LocalStrategy(function (username, password, done) {
 app.post('/register', passport.authenticate('register'), function (req, res) {
   res.json(req.user);
 });
-//===================================
+
 //===================================
 
 app.get('/currentUser', function (req, res) {
@@ -162,5 +162,12 @@ app.delete('/beers/:beer/reviews/:review', function(req, res, next) {
     }
   });
 });
+
+app.get('/logout', function (req, res) {
+  req.logout();
+  res.send('Logged out!');
+  res.redirect('/');
+});
+
 
 app.listen(8000);

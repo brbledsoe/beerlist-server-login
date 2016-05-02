@@ -2,7 +2,8 @@ var RegisterView = Backbone.View.extend({
   el: $('.register-container'),
 
   events: {
-    'click .register': 'register'
+    'click .register': 'register',
+    // 'click .login': 'login'
   },
 
   register: function (e) {
@@ -23,5 +24,28 @@ var RegisterView = Backbone.View.extend({
         console.log(response);
       }
     });
-  }
+  },
+
+  // login: function (e) {
+  //   e.preventDefault();
+
+  //   var user = new UserModel({
+  //     username: this.$('#login-username').val(), 
+  //     password: this.$('#login-password').val()
+  //   });
+    
+  //   user.fetch({}, {
+  //     success: function (user) {
+  //       alert(user.get('username') +  ' is successfully registered');
+  //       beerRouter.navigate('/' , true);
+  //     },
+  //     error : function (user, response) {
+  //       console.log(user);
+  //       console.log(response);
+  //     }
+  // //   });
+  //   })
+
+  // }
+
 });
