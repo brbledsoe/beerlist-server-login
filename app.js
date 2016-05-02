@@ -142,6 +142,7 @@ app.post('/register', passport.authenticate('register'), function (req, res) {
   res.json(req.user);
 });
 
+
 //===================================
 
 app.get('/currentUser', function (req, res) {
