@@ -166,8 +166,8 @@ app.delete('/beers/:beer/reviews/:review', function(req, res, next) {
 
 app.get('/logout', function (req, res) {
   req.logout();
-  res.send('Logged out!');
   res.redirect('/');
+  // res.send('Logged out!');
 });
 
 //Create authentication strategy called 'login'

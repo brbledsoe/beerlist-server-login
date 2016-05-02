@@ -1,4 +1,6 @@
 var AppModel = Backbone.Model.extend({
+  url: '/currentUser',
+
   defaults: function () {
     return {
       beers: new BeersCollection(),
@@ -6,8 +8,9 @@ var AppModel = Backbone.Model.extend({
       current_beer: null,
 
       // either true or false
-      view: 'beers'
+      view: 'beers',
 
+      current_user: new UserModel(),
 
     }
   },
@@ -21,5 +24,12 @@ var AppModel = Backbone.Model.extend({
     var id = beer.get('_id');
 
     beer.get('reviews').url = '/beers/' + id + '/reviews';
+  },
+
+  parse: function (response) {
+    if (response) {
+      var user = new UserModel(response);
+      this.set('current_user', user);
+    }
   }
 });
