@@ -170,5 +170,53 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
+//Create authentication strategy called 'login'
+passport.use('login', new LocalStrategy(function(username, password, done){
+  User.findOne({'username':username}, function(err, user){
+    if(err){
+      console.log("Error");
+      return done(err);
+    }
+
+    if(user){
+      if(user.password === password){
+        console.log("Welcome back,", username);
+        return done(null, user);
+      }
+      else{
+        console.log("Wrong password");
+        return done(null, {failedPass:true});
+      }
+    }
+    else{
+      //The reason we use an empty object is because to handle a failure (i.e passing null, false) we'd have to setup a SuccessRedirect and FailureRedirect in the app.post, and we're way too lazy for that shit, so we just checked with ifs. hopa.
+      console.log("You gotta register");
+      return done(null, {});
+    }
+  })
+}))
+
+app.post('/login', passport.authenticate('login'), function(req,res){
+ 
+
+  if(isEmpty(req.user)){
+    res.redirect('/#/register');
+  }
+  else if(req.user && req.user.failedPass){
+    res.redirect('/#/login');
+  }
+  else{
+    res.redirect('/');    
+  }
+
+  function isEmpty(obj){
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+    return true;
+  }
+
+})
 
 app.listen(8000);
