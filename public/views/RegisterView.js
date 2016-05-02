@@ -23,6 +23,7 @@ var RegisterView = Backbone.View.extend({
       error : function (user, response) {
         console.log(user);
         console.log(response);
+        alert('this user already exists!');
       }
     });
   }
