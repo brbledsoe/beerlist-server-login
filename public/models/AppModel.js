@@ -7,6 +7,8 @@ var AppModel = Backbone.Model.extend({
 
       // either true or false
       view: 'beers'
+
+
     }
   },
 
